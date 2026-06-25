@@ -1,0 +1,7 @@
+# Apps Script — локальные креды и конфиг clasp не публикуем
+apps-script/.clasp.json
+apps-script/.clasprc.json
+.DS_Store
+_*.html
+_*.png
+preview*.png
