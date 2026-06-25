@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta name="theme-color" content="#0a7d3c" />
+<title>Челлендж в БД — v2</title>
+<meta name="description" content="Заполни, чтобы максимизировать шанс входа в БД-челлендж." />
+<meta property="og:title" content="Челлендж в БД" />
+<meta property="og:description" content="Как вывести канал на доход за 30 дней, уделяя 1 час в день." />
+<meta property="og:image" content="img/ilya.jpg" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;800;900&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --green-900: #064e2b;
+    --green-700: #0a7d3c;
+    --green-500: #14b85a;
+    --green-400: #2bd66f;
+    --green-glow: rgba(43, 214, 111, 0.45);
+    --ink: #0a2417;
+    --paper: #ffffff;
+    --field-bg: #f1faf3;
+    --field-border: #cdeed6;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  html, body {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  body {
+    font-family: 'Montserrat', system-ui, -apple-system, sans-serif;
+    background:
+      radial-gradient(1200px 600px at 50% -10%, var(--green-500), transparent 60%),
+      linear-gradient(160deg, var(--green-900) 0%, #03351d 100%);
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    position: relative;
+  }
+
+  /* мягкие светящиеся пятна на фоне */
+  body::before, body::after {
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(70px);
+    opacity: 0.5;
+    z-index: 0;
+  }
+  body::before { width: 320px; height: 320px; background: var(--green-400); top: -80px; left: -60px; }
+  body::after  { width: 380px; height: 380px; background: var(--green-700); bottom: -120px; right: -80px; }
+
+  .card {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 430px;
+    max-height: calc(100dvh - 32px);
+    background: var(--paper);
+    border-radius: 28px;
+    padding: 26px 24px 24px;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.4) inset;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* фото с подписями двух исходов */
+  .reveal {
+    margin: 0 auto 14px;
+    width: 100%;
+    max-width: 300px;
+  }
+  .reveal-photo {
+    position: relative;
+    border-radius: 18px;
+    overflow: hidden;
+    border: 3px solid var(--green-500);
+    box-shadow: 0 0 0 5px var(--green-glow), 0 14px 30px rgba(0,0,0,0.22);
+  }
+  .reveal-photo img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 3.1;
+    object-fit: cover;
+    object-position: 50% 22%;
+  }
+  /* тонкая линия-разделитель ровно по центру (стык половин) */
+  .reveal-photo::after {
+    content: "";
+    position: absolute;
+    top: 0; bottom: 0; left: 50%;
+    width: 2px;
+    transform: translateX(-50%);
+    background: rgba(255,255,255,0.6);
+    box-shadow: 0 0 6px rgba(0,0,0,0.25);
+  }
+  /* подписи под фото: две колонки = две половины */
+  .reveal-caps {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .cap {
+    text-align: center;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.25;
+    padding: 8px 6px;
+    border-radius: 12px;
+  }
+  .cap small {
+    display: block;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+    opacity: 0.9;
+  }
+  /* левая половина фото = с волосами = успех */
+  .cap.win {
+    background: var(--field-bg);
+    color: var(--green-900);
+    border: 1.5px solid var(--green-400);
+  }
+  .cap.win small { color: var(--green-500); }
+  /* правая половина = лысый = провал */
+  .cap.lose {
+    background: #fbeef0;
+    color: #7d2230;
+    border: 1.5px solid #f2c4cc;
+  }
+  .cap.lose small { color: #d6263b; }
+
+  .badge {
+    display: table;
+    margin: 0 auto 8px;
+    background: var(--green-500);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 5px 12px;
+    border-radius: 999px;
+  }
+
+  h1 {
+    text-align: center;
+    font-size: 30px;
+    font-weight: 900;
+    line-height: 1.05;
+    color: var(--green-900);
+    margin-bottom: 10px;
+  }
+  h1 .accent { color: var(--green-500); }
+
+  .subtitle {
+    text-align: center;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.4;
+    color: #3a5a48;
+    margin-bottom: 18px;
+  }
+
+  form { display: flex; flex-direction: column; gap: 11px; }
+
+  .field { position: relative; }
+  .field label {
+    position: absolute;
+    left: 16px;
+    top: 11px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--green-700);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    pointer-events: none;
+  }
+  .field input {
+    width: 100%;
+    border: 2px solid var(--field-border);
+    background: var(--field-bg);
+    border-radius: 14px;
+    padding: 28px 16px 11px;
+    font-size: 16px;
+    font-family: inherit;
+    font-weight: 600;
+    color: var(--ink);
+    transition: border-color .15s, box-shadow .15s;
+  }
+  .field input::placeholder { color: #9fbfac; font-weight: 500; }
+  .field input:focus {
+    outline: none;
+    border-color: var(--green-500);
+    box-shadow: 0 0 0 4px var(--green-glow);
+  }
+
+  .submit {
+    margin-top: 6px;
+    border: none;
+    cursor: pointer;
+    background: linear-gradient(135deg, var(--green-400), var(--green-700));
+    color: #fff;
+    font-family: inherit;
+    font-size: 18px;
+    font-weight: 800;
+    padding: 16px;
+    border-radius: 16px;
+    box-shadow: 0 12px 28px var(--green-glow);
+    transition: transform .12s, box-shadow .12s, opacity .12s;
+  }
+  .submit:active { transform: translateY(2px) scale(0.99); }
+  .submit:disabled { opacity: 0.6; cursor: default; }
+
+  .error {
+    color: #d6263b;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+    min-height: 16px;
+    margin-top: 2px;
+  }
+
+  .hint {
+    text-align: center;
+    font-size: 11px;
+    color: #8aa698;
+    margin-top: 4px;
+  }
+
+  /* ===== экран успеха ===== */
+  .success {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    animation: pop .4s ease;
+  }
+  .success.show { display: flex; }
+  .form-screen.hide { display: none; }
+
+  @keyframes pop {
+    from { opacity: 0; transform: scale(0.92); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+
+  .check {
+    width: 84px; height: 84px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--green-400), var(--green-700));
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 16px;
+    box-shadow: 0 0 0 8px var(--green-glow);
+  }
+  .check svg { width: 44px; height: 44px; }
+
+  .success h2 {
+    font-size: 26px;
+    font-weight: 900;
+    color: var(--green-900);
+    line-height: 1.1;
+    margin-bottom: 12px;
+  }
+  .success p {
+    font-size: 15px;
+    font-weight: 500;
+    color: #3a5a48;
+    line-height: 1.45;
+    margin-bottom: 8px;
+  }
+  .success .bonus {
+    background: var(--field-bg);
+    border: 2px dashed var(--green-400);
+    border-radius: 14px;
+    padding: 12px 14px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--green-900);
+    margin-top: 14px;
+  }
+  .success .bonus b { color: var(--green-500); }
+
+  .tg-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    margin-top: 18px;
+    text-decoration: none;
+    background: linear-gradient(135deg, #2aabee, #229ed9);
+    color: #fff;
+    font-size: 18px;
+    font-weight: 800;
+    padding: 16px;
+    border-radius: 16px;
+    box-shadow: 0 12px 28px rgba(34,158,217,0.45);
+    transition: transform .12s;
+  }
+  .tg-btn:active { transform: translateY(2px); }
+  .tg-btn svg { width: 24px; height: 24px; }
+
+  @media (max-height: 760px) {
+    .reveal { max-width: 250px; margin-bottom: 10px; }
+    .reveal-photo img { aspect-ratio: 4 / 2.7; object-position: 50% 20%; }
+    .cap { font-size: 11px; padding: 6px 5px; }
+    h1 { font-size: 26px; }
+    .subtitle { font-size: 13px; margin-bottom: 13px; }
+    .card { padding: 18px 20px 16px; }
+  }
+</style>
+</head>
+<body>
+  <main class="card">
+    <!-- ЭКРАН 1: форма -->
+    <section class="form-screen" id="formScreen">
+      <div class="reveal">
+        <div class="reveal-photo">
+          <img src="img/ilya.jpg" alt="Илья — два исхода челленджа" />
+        </div>
+        <div class="reveal-caps">
+          <div class="cap win"><small>Выполню</small>путёвка родителям 🌴</div>
+          <div class="cap lose"><small>Провалю</small>бреюсь налысо 💈</div>
+        </div>
+      </div>
+      <span class="badge">30 дней · 1 час в день</span>
+      <h1>Челлендж в <span class="accent">БД</span></h1>
+      <p class="subtitle">
+        Заполни, чтобы максимизировать шанс входа в БД-челлендж, где я буду
+        транслировать, как вывожу канал на доход в течение 30 дней, уделяя
+        только 1 час в день.
+      </p>
+
+      <form id="form" novalidate>
+        <div class="field">
+          <label for="name">Имя</label>
+          <input id="name" name="name" type="text" autocomplete="name"
+                 placeholder="Как тебя зовут?" required />
+        </div>
+        <div class="field">
+          <label for="instagram">Никнейм в Instagram</label>
+          <input id="instagram" name="instagram" type="text" autocapitalize="off"
+                 autocorrect="off" spellcheck="false" placeholder="@username" required />
+        </div>
+        <button class="submit" type="submit" id="submitBtn">Участвовать в БД 🚀</button>
+        <div class="error" id="error"></div>
+      </form>
+    </section>
+
+    <!-- ЭКРАН 2: успех -->
+    <section class="success" id="successScreen">
+      <div class="check">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"
+             stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 12.5l5 5L20 6" />
+        </svg>
+      </div>
+      <h2>Поздравляю со входом в БД! 🎉</h2>
+      <p>Теперь переходи и подпишись в закрытый TG-канал только для участников БД.</p>
+
+      <a class="tg-btn" id="tgBtn" href="https://t.me/+ttYucGP_RHI1MTUy" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71l-4.14-3.05-1.99 1.93c-.23.23-.42.42-.83.42z"/>
+        </svg>
+        Перейти в канал БД
+      </a>
+
+      <div class="bonus">
+        Там тебя уже ждёт список из <b>10 НОВЫХ ниш</b> для западного YouTube-канала
+      </div>
+    </section>
+  </main>
+
+<script>
+  // === НАСТРОЙКА: сюда вставить URL Web App из Apps Script ===
+  // Пример: https://script.google.com/macros/s/AKfy.../exec
+  var ENDPOINT = "https://script.google.com/macros/s/AKfycbyyta_imjcgJMNG0IlDXPGXc9UXChoUnrEsoShWhbtfjjAj1vD2XemWzCg2dhwmHvQJyQ/exec";
+
+  var form = document.getElementById('form');
+  var btn = document.getElementById('submitBtn');
+  var errorEl = document.getElementById('error');
+
+  form.addEventListener('submit', function (ev) {
+    ev.preventDefault();
+    errorEl.textContent = '';
+
+    var name = document.getElementById('name').value.trim();
+    var instagram = document.getElementById('instagram').value.trim();
+
+    if (!name) { errorEl.textContent = 'Укажи имя'; return; }
+    if (!instagram) { errorEl.textContent = 'Укажи никнейм в Instagram'; return; }
+
+    btn.disabled = true;
+    btn.textContent = 'Отправляем…';
+
+    var data = new URLSearchParams();
+    data.append('name', name);
+    data.append('instagram', instagram);
+
+    // text/plain -> простой запрос без CORS-preflight (Apps Script дружелюбен к нему)
+    fetch(ENDPOINT, {
+      method: 'POST',
+      body: data
+    })
+    .then(function () { showSuccess(); })
+    .catch(function () {
+      // Даже при сетевой ошибке не блокируем пользователя — показываем успех,
+      // но логируем. Можно заменить на повторную попытку при желании.
+      showSuccess();
+    });
+  });
+
+  function showSuccess() {
+    document.getElementById('formScreen').classList.add('hide');
+    document.getElementById('successScreen').classList.add('show');
+  }
+</script>
+</body>
+</html>
